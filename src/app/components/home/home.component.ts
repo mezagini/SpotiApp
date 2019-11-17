@@ -10,13 +10,24 @@ import { SpotifyService } from 'src/app/services/spotify.service';
 export class HomeComponent implements OnInit {
 
   nuevasCanciones: any[] = [];
+  loading: boolean;
+  error: boolean;
+  mensajeError: string;
+
   constructor( private spotify: SpotifyService) {
 
+    this.loading = true;
+    this.error = false;
 
-   this.spotify.getNewReleases()
+    this.spotify.getNewReleases()
                .subscribe((data: any) => {
-                console.log(data.albums.items);
+
                 this.nuevasCanciones = data;
+                this.loading = false;
+               },
+               ( error ) => {// manejo de errores en observables
+                 this.error = true;
+                 this.mensajeError = error.error.error.message;
                });
 
   }
